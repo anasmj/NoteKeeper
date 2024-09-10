@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notekeeper/src/app/auth/sign.in.dart';
+import 'package:notekeeper/src/app/auth/sign.up.dart';
+import 'package:notekeeper/src/providers/auth.type.provider.dart';
 
-class AuthenticatePage extends StatelessWidget {
+class AuthenticatePage extends ConsumerWidget {
   const AuthenticatePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('You need to log in'),
-      ),
-    );
+  Widget build(BuildContext context, ref) {
+    final authType = ref.watch(authTypePProvider);
+    return authType == AuthType.signIn
+        ? const SignInPage()
+        : const SignUpPage();
   }
 }
