@@ -195,10 +195,6 @@ class _SignupState extends ConsumerState<Signup> {
                       Consumer(builder: (context, ref, _) {
                         return TextButton(
                           onPressed: () {
-                            // Navigator.pushReplacement(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (_) => const Login()));
                             ref
                                 .read(authTypePProvider.notifier)
                                 .toggleAuthType(AuthType.signIn);

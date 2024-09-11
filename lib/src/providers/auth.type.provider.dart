@@ -7,7 +7,6 @@ enum AuthType { signIn, signUp }
 class AuthTypeP extends _$AuthTypeP {
   @override
   AuthType build() => AuthType.signIn;
-  void toggleAuthType(AuthType type) {
-    state = type == AuthType.signUp ? AuthType.signIn : AuthType.signUp;
-  }
+
+  void toggleAuthType(AuthType type) => state = type;
 }

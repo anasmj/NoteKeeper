@@ -148,15 +148,7 @@ class _LoginState extends State<Login> {
                             _formKey.currentState?.reset();
                             ref
                                 .read(authTypePProvider.notifier)
-                                .toggleAuthType(AuthType.signIn);
-                            // Navigator.pushReplacement(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) {
-                            //       return const Signup();
-                            //     },
-                            //   ),
-                            // );
+                                .toggleAuthType(AuthType.signUp);
                           },
                           child: const Text("Signup"),
                         );
