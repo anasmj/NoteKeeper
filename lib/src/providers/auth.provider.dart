@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:notekeeper/src/data/app.user.dart';
+import 'package:notekeeper/src/providers/loading.provider.dart';
 import 'package:notekeeper/src/services/auth/auth.services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'auth.provider.g.dart';
@@ -20,8 +21,19 @@ class Auth extends _$Auth {
         photoUrl: user.photoURL,
       );
 
-  Future<void> signUp(String email, String pass) async {
-    final user = await AuthServices().register(email, pass);
-    if (user != null) state = _fromFirebaseUser(user);
+  Future<String?> signIn(String email, String pass) async {
+    ref.read(loadingProvider.notifier).update(true);
+    final errorMsg = await AuthServices().login(email, pass);
+    ref.read(loadingProvider.notifier).update(false);
+    return errorMsg;
+  }
+
+
+  Future<String?> signUp(String email, String pass) async {
+    ref.read(loadingProvider.notifier).update(true);
+    final errorMsg = await AuthServices().register(email, pass);
+    ref.read(loadingProvider.notifier).update(false);
+
+    return errorMsg;
   }
 }

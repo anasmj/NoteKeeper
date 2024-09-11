@@ -24,4 +24,23 @@ class NotesP extends _$NotesP {
       return false;
     }
   }
+
+  Future<bool> updateNote(String userId, Note note) async {
+    final isUpdated = await noteRepo.updateNote(userId, note);
+    if (isUpdated) {
+      List<Note> notes = state.value ?? [];
+      notes.removeWhere((n) => note.id == n.id);
+      notes.insert(0, note);
+      state = AsyncData(notes);
+    }
+
+    return isUpdated;
+  }
+
+  Future delete(Note note) async {
+    if (await noteRepo.deleteNote(ref.read(authProvider).id!, note)) {
+      state = AsyncData(state.value ?? []
+        ..removeWhere((n) => n.id == note.id));
+    }
+  }
 }

@@ -9,7 +9,11 @@ class NoteRepository extends FirebaseService {
   @override
   Future<bool> addNote(String userId, Note note) async {
     try {
-      await db.collection('notes').doc(userId).set(note.toMap());
+      final notesCollection =
+          db.collection('users').doc(userId).collection('notes');
+      DocumentReference newNoteRef = notesCollection.doc();
+      newNoteRef.set(note.toMap());
+
       return true;
     } on FirebaseException catch (e) {
       log(e.toString(), name: 'firebase');
@@ -18,8 +22,16 @@ class NoteRepository extends FirebaseService {
   }
 
   @override
-  Future<void> deleteNote(String userId, Note note) async {
-    db.collection('notes').doc(userId).delete();
+  Future<bool> deleteNote(String userId, Note note) async {
+    try {
+      DocumentReference noteRef =
+          db.collection('users').doc(userId).collection('notes').doc(note.id);
+
+      await noteRef.delete();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   @override
@@ -27,9 +39,19 @@ class NoteRepository extends FirebaseService {
     List<Note> notes = [];
 
     try {
-      notes = await db.collection('notes').get().then((snapshot) {
-        return snapshot.docs.map((doc) => Note.fromMap(doc.data())).toList();
-      });
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('notes')
+          .get();
+
+      List<Note> notes = [];
+      for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+        notes.add(Note.fromMap(doc.data() as Map<String, dynamic>)
+            .copyWith(id: doc.id));
+      }
+
+      return notes;
     } on FirebaseException catch (e) {
       log(e.toString(), name: 'fetch notes');
     }
@@ -37,13 +59,19 @@ class NoteRepository extends FirebaseService {
   }
 
   @override
-  Future<void> updateNote(String userId, Note note) async {
-    final userNoteRef = db.collection("notes").doc(userId);
-    userNoteRef
-        .update(note.toMap())
-        .then((_) => log('Updated Note'))
-        .catchError(
-          (error) => log(error.toString()),
-        );
+  Future<bool> updateNote(String userId, Note note) async {
+    print('deleting id ${note.id}');
+    try {
+      DocumentReference noteRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('notes')
+          .doc(note.id);
+
+      await noteRef.update(note.toMap());
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

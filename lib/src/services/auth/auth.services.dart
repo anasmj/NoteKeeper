@@ -1,10 +1,11 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notekeeper/src/data/app.user.dart';
+import 'package:notekeeper/src/utils/msg.from.error.dart';
 
-import 'firebase.auth.dart';
-
-class AuthServices extends FirebaseAuthService {
+class AuthServices {
   final _auth = FirebaseAuth.instance;
 
   StreamProvider<AppUser?> authProvider() => StreamProvider<AppUser?>((ref) {
@@ -23,25 +24,31 @@ class AuthServices extends FirebaseAuthService {
 
   Stream<AppUser?> get user => _auth.authStateChanges().map(_fromFirebaseUser);
 
-  @override
-  Future<User?> register(String email, String password) async {
-    final credential = await _auth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    return credential.user;
+  Future<String?> register(String email, String password) async {
+    try {
+      await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return null;
+    } on FirebaseException catch (e) {
+      return getMessageFromErrorCode(e.code);
+    }
   }
 
-  @override
-  Future<User?> login(String email, String password) async {
-    final creds = await _auth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    return creds.user;
+  Future<String?> login(String email, String password) async {
+    try {
+      await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return null;
+    } on FirebaseException catch (e) {
+      log(e.toString(), name: 'login');
+      return getMessageFromErrorCode(e.code);
+    }
   }
 
-  @override
   Future<void> logout() async {
     await FirebaseAuth.instance.signOut();
   }

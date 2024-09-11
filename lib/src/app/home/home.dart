@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notekeeper/src/app/home/components/conte.container.dart';
+import 'package:notekeeper/src/app/home/components/note.container.dart';
 import 'package:notekeeper/src/app/home/drawer/drawer.dart';
 import 'package:notekeeper/src/app/home/note.detail.dart';
 import 'package:notekeeper/src/extensions/extensions.dart';
@@ -32,7 +32,13 @@ class HomePage extends ConsumerWidget {
                       crossAxisSpacing: 6,
                       childAspectRatio: 0.8,
                     ),
-                    itemBuilder: (_, i) => NoteContainer(note: notes[i]),
+                    itemBuilder: (_, i) => NoteContainer(
+                      note: notes[i],
+                      onTap: () => context.fadePush(NoteDetail(note: notes[i])),
+                      onDelete: () async => await ref
+                          .read(notesPProvider.notifier)
+                          .delete(notes[i]),
+                    ),
                   ),
                 );
               },

@@ -6,7 +6,9 @@ enum AuthType { signIn, signUp }
 @riverpod
 class AuthTypeP extends _$AuthTypeP {
   @override
-  AuthType build() => AuthType.signUp;
-  void toggleAuthType() =>
-      state = state == AuthType.signUp ? AuthType.signIn : AuthType.signUp;
+  AuthType build() => AuthType.signIn;
+  void toggleAuthType(AuthType type) {
+    state = type == AuthType.signUp ? AuthType.signIn : AuthType.signUp;
+    print('from $type to $state');
+  }
 }

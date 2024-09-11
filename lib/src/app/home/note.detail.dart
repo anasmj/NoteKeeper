@@ -40,25 +40,7 @@ class _NoteDetailState extends ConsumerState<NoteDetail> {
         actions: [
           IconButton(
             icon: const Icon(Icons.save),
-            onPressed: () async {
-              final userId = ref.watch(authProvider).id;
-              if (userId == null) return;
-              final isSaved = await ref.read(notesPProvider.notifier).save(
-                    userId,
-                    Note(
-                      title: _titleController.text,
-                      content: _contentController.text,
-                      date: DateTime.now(),
-                    ),
-                  );
-              if (!context.mounted) return;
-              if (isSaved) {
-                Navigator.pop(context);
-                context.showSnack('Note saved!');
-              } else {
-                context.showSnack('Could not save, Try again later');
-              }
-            },
+            onPressed: () async => await saveOrUpdateNote(context, ref),
           ),
         ],
       ),
@@ -89,5 +71,36 @@ class _NoteDetailState extends ConsumerState<NoteDetail> {
         ),
       ),
     );
+  }
+
+  Future saveOrUpdateNote(BuildContext context, WidgetRef ref) async {
+    final userId = ref.watch(authProvider).id;
+    if (userId == null) return;
+    bool success = false;
+    if (widget.note == null) {
+      success = await ref.read(notesPProvider.notifier).save(
+            userId,
+            Note(
+              title: _titleController.text,
+              content: _contentController.text,
+              date: DateTime.now(),
+            ),
+          );
+    } else {
+      success = await ref.read(notesPProvider.notifier).updateNote(
+          userId,
+          widget.note!.copyWith(
+            title: _titleController.text,
+            content: _contentController.text,
+          ));
+    }
+
+    if (!context.mounted) return;
+    if (success) {
+      Navigator.pop(context);
+      context.showSnack(widget.note != null ? 'Note updated!' : 'Note saved!');
+    } else {
+      context.showSnack('Could not save, Try again later');
+    }
   }
 }

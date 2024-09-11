@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notekeeper/src/extensions/extensions.dart';
 import 'package:notekeeper/src/providers/auth.provider.dart';
+import 'package:notekeeper/src/services/auth/auth.services.dart';
 
 class AppDrawer extends ConsumerWidget {
   const AppDrawer({super.key});
@@ -49,7 +50,7 @@ class AppDrawer extends ConsumerWidget {
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
             ),
-            onPressed: () {},
+            onPressed: () async => await AuthServices().logout(),
             child: const Text('Logout'),
           ),
         ],
