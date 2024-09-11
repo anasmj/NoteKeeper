@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
+import 'package:notekeeper/src/data/auth.p.dart';
 import 'package:notekeeper/src/extensions/extensions.dart';
-import 'package:notekeeper/src/providers/auth.provider.dart';
-import 'package:notekeeper/src/services/auth/auth.services.dart';
+import 'package:notekeeper/src/services/firebase/auth/auth.services.dart';
 
 class AppDrawer extends ConsumerWidget {
   const AppDrawer({super.key});
 
   @override
   Widget build(BuildContext context, ref) {
-    final user = ref.watch(authProvider);
+    final user = ref
+        .watch(userProvider)
+        .when(data: (user) => user, error: (e, s) => null, loading: () => null);
+
     return Drawer(
       child: Column(
         children: [
@@ -24,21 +28,22 @@ class AppDrawer extends ConsumerWidget {
             ),
             child: Align(
               alignment: Alignment.bottomLeft,
-              child: Text(
-                user.name ?? user.email ?? '',
-                style: const TextStyle(
-                  color: Colors.white,
-                ),
-              ),
+              child: user != null
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Icon(Icons.email_outlined, color: Colors.white),
+                        const Gap(10),
+                        Text(
+                          user.email ?? 'Anonymous',
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    )
+                  : const SizedBox.shrink(),
             ),
-          ),
-          ListTile(
-            title: const Text('Item 1'),
-            onTap: () {},
-          ),
-          ListTile(
-            title: const Text('Item 2'),
-            onTap: () {},
           ),
           const Spacer(),
           TextButton(

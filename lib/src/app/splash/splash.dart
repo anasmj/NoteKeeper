@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notekeeper/src/app/auth/auth.wrapper.dart';
 
 class SplashView extends ConsumerStatefulWidget {
   const SplashView({
     super.key,
-    required this.duration,
-    this.onFinish,
-    this.child,
   });
-  final Duration duration;
-  final Widget? child;
-  final VoidCallback? onFinish;
+
   @override
   ConsumerState<SplashView> createState() => _SplashViewState();
 }
@@ -19,6 +15,7 @@ class _SplashViewState extends ConsumerState<SplashView>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _animation;
+  final _duration = const Duration(milliseconds: 100);
 
   @override
   void initState() {
@@ -36,9 +33,15 @@ class _SplashViewState extends ConsumerState<SplashView>
     _controller.addStatusListener(
       (status) async {
         if (status == AnimationStatus.completed) {
-          await Future.delayed(widget.duration);
-          if (!context.mounted) return;
-          if (widget.onFinish != null) widget.onFinish!();
+          await Future.delayed(_duration);
+          if (context.mounted) {
+            // ignore: use_build_context_synchronously
+            Navigator.of(context).pushReplacement(
+              NoRouteTransition(
+                builder: (context) => const AuthWrapper(),
+              ),
+            );
+          }
         }
       },
     );
@@ -61,12 +64,11 @@ class _SplashViewState extends ConsumerState<SplashView>
               return ScaleTransition(
                 scale: _animation,
                 alignment: Alignment.center,
-                child: widget.child,
-                // child: const Image(
-                //   image: AssetImage('assets/images/clock_logo.png'),
-                //   height: 300,
-                //   width: 300,
-                // ),
+                child: const Image(
+                  image: AssetImage('assets/images/png/pencil.png'),
+                  height: 300,
+                  width: 300,
+                ),
               );
             }),
       ),

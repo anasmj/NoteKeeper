@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:notekeeper/src/data/app.user.dart';
 import 'package:notekeeper/src/providers/loading.provider.dart';
-import 'package:notekeeper/src/services/auth/auth.services.dart';
+import 'package:notekeeper/src/services/firebase/auth/auth.services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'auth.provider.g.dart';
 

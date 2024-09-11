@@ -36,18 +36,33 @@ class NoteContainer extends StatelessWidget {
               note.content ?? '',
             ),
             const Spacer(),
-            Text('${note.date ?? ''}'),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: IconButton(
-                iconSize: 28,
-                style: IconButton.styleFrom(padding: EdgeInsets.zero),
-                onPressed: onDelete,
-                icon: const Icon(
-                  Icons.delete,
-                  color: Colors.red,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                note.date != null
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            note.date!.formattedTime,
+                            style: context.text.titleMedium,
+                          ),
+                          if (!note.date!.isToday)
+                            Text(note.date!.formattedDate)
+                        ],
+                      )
+                    : const SizedBox.shrink(),
+                IconButton(
+                  iconSize: 28,
+                  style: IconButton.styleFrom(padding: EdgeInsets.zero),
+                  onPressed: onDelete,
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
                 ),
-              ),
+              ],
             ),
           ],
         ),

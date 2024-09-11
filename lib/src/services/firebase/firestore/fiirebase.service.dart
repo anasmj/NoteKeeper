@@ -9,6 +9,4 @@ abstract class FirebaseService {
   Future<bool> deleteNote(String userId, Note note);
 
   Future<List<Note>?> getNotes(String userId);
-
-  // Future<Note?> getNote(String userId, String id);
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notekeeper/src/app/home/components/empty.note.dart';
 import 'package:notekeeper/src/app/home/components/note.container.dart';
 import 'package:notekeeper/src/app/home/drawer/drawer.dart';
 import 'package:notekeeper/src/app/home/note.detail.dart';
@@ -21,6 +22,11 @@ class HomePage extends ConsumerWidget {
         onRefresh: () async => ref.invalidate(notesPProvider),
         child: ref.watch(notesPProvider).when(
               data: (notes) {
+                if (notes.isEmpty) {
+                  return const Center(
+                    child: EmptyNoteWidget(),
+                  );
+                }
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GridView.builder(

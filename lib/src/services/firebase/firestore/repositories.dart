@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:notekeeper/src/data/note.dart';
-import 'package:notekeeper/src/services/firebase/fiirebase.service.dart';
+import 'package:notekeeper/src/services/firebase/firestore/fiirebase.service.dart';
 
 class NoteRepository extends FirebaseService {
   final db = FirebaseFirestore.instance;
@@ -60,7 +60,6 @@ class NoteRepository extends FirebaseService {
 
   @override
   Future<bool> updateNote(String userId, Note note) async {
-    print('deleting id ${note.id}');
     try {
       DocumentReference noteRef = FirebaseFirestore.instance
           .collection('users')

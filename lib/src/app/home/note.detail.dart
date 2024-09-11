@@ -37,38 +37,48 @@ class _NoteDetailState extends ConsumerState<NoteDetail> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: () async => await saveOrUpdateNote(context, ref),
-          ),
-        ],
+        title: Text(widget.note != null ? 'Edit Note' : 'New Note'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: Column(
-          children: [
-            Expanded(
-                child: TextField(
+      body: Column(
+        children: [
+          Expanded(
+              child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: TextField(
               controller: _titleController,
               decoration: const InputDecoration(
                 labelText: 'Title',
               ),
-            )),
-            Expanded(
-              flex: 6,
+            ),
+          )),
+          Expanded(
+            flex: 6,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: TextField(
                 focusNode: _noteContentFocusNode,
-                controller: _contentController,
-                maxLines: 10,
+                maxLines: null,
+                expands: true,
                 decoration: const InputDecoration(
-                  // labelText: 'Note',
-                  hintText: 'Note',
+                  hintText: 'Write your note here...',
                 ),
+                keyboardType: TextInputType.multiline,
+                controller: _contentController,
               ),
             ),
-          ],
-        ),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Colors.green,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.zero,
+              ),
+              minimumSize: const Size.fromHeight(50),
+            ),
+            onPressed: () async => await saveOrUpdateNote(context, ref),
+            child: Text(widget.note != null ? 'Update' : 'Add'),
+          ),
+        ],
       ),
     );
   }

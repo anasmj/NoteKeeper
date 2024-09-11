@@ -9,6 +9,5 @@ class AuthTypeP extends _$AuthTypeP {
   AuthType build() => AuthType.signIn;
   void toggleAuthType(AuthType type) {
     state = type == AuthType.signUp ? AuthType.signIn : AuthType.signUp;
-    print('from $type to $state');
   }
 }

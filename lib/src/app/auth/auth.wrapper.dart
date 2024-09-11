@@ -13,7 +13,6 @@ class AuthWrapper extends ConsumerWidget {
     return Scaffold(
       body: ref.watch(userProvider).when(
             data: (user) {
-              print(user);
               return user == null ? const AuthenticatePage() : const HomePage();
             },
             error: (e, s) => const AuthenticatePage(),

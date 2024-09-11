@@ -1,6 +1,6 @@
 import 'package:notekeeper/src/data/note.dart';
 import 'package:notekeeper/src/providers/auth.provider.dart';
-import 'package:notekeeper/src/services/firebase/repositories.dart';
+import 'package:notekeeper/src/services/firebase/firestore/repositories.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notes.provider.g.dart';
